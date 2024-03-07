@@ -8,6 +8,6 @@ move the .jpg and .png files in the static folder;
 move the .html and .css files in the templates folder;
 keep all the remainig files in the same folder alongside static and temlates;
 app.py is the main file to run;
-Locatoinlimiter.py is used to create and save the model;
+Locatoincropedited1000.py is used to create and save the model;
 
 
