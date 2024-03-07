@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Analysis and Crop Prediction</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <style>
+        /* styles.css */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            box-sizing: border-box;
+        }
+
+        nav {
+            background-color: #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .container {
+            max-width: 60%;
+            padding: 34px;
+            margin: auto;
+        }
+
+        .container h1, p {
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        nav .logo img {
+            width: 50px;
+            height: 50px;
+        }
+
+        nav ul.nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            color: #f3f3f3;
+        }
+
+        nav ul.nav-links li {
+            font-size: 18px;
+            color: #f3f3f3;
+        }
+
+        nav .auth-buttons button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        nav .auth-buttons button:hover {
+            background-color: #45a049;
+        }
+
+        .content {
+            text-align: center;
+            padding: 50px;
+            color: #333;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .content h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            font-size: 18px;
+        }
+
+        #crop-prediction-form {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #crop-prediction-form label {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        #crop-prediction-form input[type="number"],
+        #crop-prediction-form select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #crop-prediction-form #ph-input {
+            width: 40%;
+        }
+
+        #crop-prediction-form button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        #crop-prediction-form button:hover {
+            background-color: #45a049;
+        }
+
+        .background-image {
+            background-image: url('/static/globalagriculture.jpg');
+            background-size: cover;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        /* Define the color ranges based on pH values */
+        #ph-slider::-webkit-slider-runnable-track {
+            background: linear-gradient(to right, red 0%, red 48%, green 48%, green 50%, blue 50%, blue 100%);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            height: 10px;
+            cursor: pointer;
+        }
+
+        /* Customize the thumb (slider handle) */
+        #ph-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Adjust the thumb position based on pH values */
+        #ph-slider::-webkit-slider-thumb::before {
+            content: attr(value);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            background-color: white;
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav>
+    <div class="logo">
+        <img src="/static/6959474.png" alt="Logo">
+    </div>
+    <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="auth-buttons">
+        <button id="login-btn">Login</button>
+        <button id="signup-btn">Sign Up</button>
+    </div>
+</nav>
+
+<!-- Content Section -->
+<div class="container">
+    <section class="content">
+        <h1>Soil Analysis and Crop Prediction</h1>
+        <p>Enter soil parameters to predict the best crops for cultivation.</p>
+        <form id="crop-prediction-form" method="POST" action="/">
+            <br>
+            <label for="region">Select a State:</label>
+            <select id="region" name="region" required>
+                <option value="">select</option>
+                <option value="1">Andhra Pradesh</option>
+                <option value="2">Arunachal Pradesh</option>
+                <option value="3">Assam</option>
+                <option value="4">Bihar</option>
+                <option value="5">Goa</option>
+                <option value="6">Gujarat</option>
+                <option value="7">Haryana</option>
+                <option value="8">Jammu and Kashmir</option>
+                <option value="9">Karnataka</option>
+                <option value="10">Kerala</option>
+                <option value="11">Madhya Pradesh</option>
+                <option value="12">Maharashtra</option>
+                <option value="13">Manipur</option>
+                <option value="14">Meghalaya</option>
+                <option value="15">Mizoram</option>
+                <option value="16">Nagaland</option>
+                <option value="17">Odisha</option>
+                <option value="18">Punjab</option>
+                <option value="19">Rajasthan</option>
+                <option value="20">Tamil Nadu</option>
+                <option value="21">Telangana</option>
+                <option value="22">Uttar Pradesh</option>
+                <option value="23">West Bengal</option>
+                <option value="24">Chandigarh</option>
+                <option value="25">Dadra and Nagar Haveli</option>
+                <option value="26">Himachal Pradesh</option>
+                <option value="27">Puducherry</option>
+                <option value="28">Sikkim</option>
+                <option value="29">Tripura</option>
+                <option value="30">Andaman and Nicobar Islands</option>
+                <option value="31">Chhattisgarh</option>
+                <option value="32">Uttarakhand</option>
+                <option value="33">Jharkhand</option>
+            </select>
+            <!-- In your HTML form inputs, add min and max attributes for nitrogen, phosphorous, potassium, and rainfall -->
+            <label for="nitrogen">Nitrogen (N):</label>
+            <input type="number" id="nitrogen" name="nitrogen" step="0.01" required min="{{ min_n }}" max="{{ max_n }}"><br>
+
+            <label for="phosphorous">Phosphorous (P):</label>
+            <input type="number" id="phosphorous" name="phosphorous" step="0.01" required min="{{ min_p }}" max="{{ max_p }}"><br>
+
+            <label for="potassium">Potassium (K):</label>
+            <input type="number" id="potassium" name="potassium" step="0.01" required min="{{ min_k }}" max="{{ max_k }}"><br>
+
+            <label for="temperature">Temperature (°C):</label>
+            <input type="number" id="temperature" step="0.01" name="temperature" required><br>
+
+            <label for="rainfall">Rainfall (mm):</label>
+            <input type="number" id="rainfall" step="0.01" name="rainfall" required min="{{ min_rainfall }}" max="{{ max_rainfall }}"><br>
+
+
+            <label for="ph">pH:</label>
+            <input type="number" id="ph" name="ph" min="1" max="14" step="0.01" value="7">
+            <input type="range" id="ph-slider" min="1" max="14" step="0.01" value="7">
+
+            <br>
+         
+
+            <button type="submit">Predict Best Crop</button>
+        </form>
+        <div id="prediction-result">
+            <p>
+                {% if result %}
+                {{ result }}
+                {% endif %}
+            </p>
+        </div>
+    </section>
+</div>
+
+<!-- Background Image -->
+<div class="background-image"></div>
+
+<!-- JavaScript -->
+<script>
+    // JavaScript to synchronize slider and input values
+    const phSlider = document.getElementById('ph-slider');
+    const phInput = document.getElementById('ph');
+    const phValue = document.getElementById('ph-value');
+
+    phSlider.addEventListener('input', () => {
+        const value = parseFloat(phSlider.value).toFixed(2);
+        phInput.value = value;
+        phValue.textContent = `pH: ${value}`;
+    });
+
+    phInput.addEventListener('input', () => {
+        const value = parseFloat(phInput.value);
+        if (!isNaN(value) && value >= 1 && value <= 14) {
+            phSlider.value = value;
+            const roundedValue = value.toFixed(2);
+            phValue.textContent = `pH: ${roundedValue}`;
+        }
+    });
+
+    // Add JavaScript to set limits based on the selected state
+    const regionSelect = document.getElementById('region');
+    const nitrogenInput = document.getElementById('nitrogen');
+    const phosphorousInput = document.getElementById('phosphorous');
+    const potassiumInput = document.getElementById('potassium');
+    const rainfallInput = document.getElementById('rainfall');
+
+    regionSelect.addEventListener('change', () => {
+        const selectedState = regionSelect.value;
+
+        // Set limits for Maharashtra 
+        if (selectedState === '12') {
+            nitrogenInput.max = 180;
+            phosphorousInput.max = 125;
+            potassiumInput.max = 200;
+            rainfallInput.max = 1500;
+        } else {
+            // Reset limits to default values for other states
+            nitrogenInput.max = 180;
+            phosphorousInput.max = 200;
+            potassiumInput.max = 300;
+            rainfallInput.max = 2000;
+        }
+    });
+</script>
+</body>
+</html>
